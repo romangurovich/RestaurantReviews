@@ -69,16 +69,19 @@ class Chef
     query = <<-SQL
       SELECT a.* FROM chefs a
       JOIN chef_tenure b ON (a.id = b.chef_id)
-      JOIN chef_tenure c ON (b.chef_id = c.chef_id)
-      WHERE b.chef_id = ?
-      AND b.restaurant_id = c.restaurant_id
-      AND
+      JOIN chef_tenure c ON (b.restaurant_id = c.restaurant_id)
+      WHERE b.chef_id != ?
+      AND c.chef_id = ?
+      AND (
         (b.start_date BETWEEN c.start_date AND c.end_date)
           OR
         (b.end_date BETWEEN c.start_date AND c.end_date)
+          OR
+        (b.start_date < c.start_date AND b.end_date > c.end_date)
+      )
     SQL
 
-    ReviewsDB.instance.execute(query, id).map do |co_worker|
+    ReviewsDB.instance.execute(query, id, id).map do |co_worker|
       Chef.new(co_worker)
     end
 
