@@ -65,15 +65,14 @@ class Restaurant
   end
 
   def attrs
-    { :id => id,
-      :name => name,
+    { :name => name,
       :neighborhood => neighborhood,
       :cuisine => cuisine }
   end
 
   def save
     if @id
-      ReviewsDB.instance.execute(<<-SQL, attrs)
+      ReviewsDB.instance.execute(<<-SQL, attrs.merge({:id => id}))
         UPDATE restaurants
         SET name => :name, neighborhood = :neighborhood, cuisine = :cuisine
         WHERE restaurants.id = :id

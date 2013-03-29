@@ -19,13 +19,12 @@ class Critic
   end
 
   def attrs
-    { :id => id,
-      :screen_name => screen_name }
+    { :screen_name => screen_name }
   end
 
   def save
     if @id
-      ReviewsDB.instance.execute(<<-SQL, attrs)
+      ReviewsDB.instance.execute(<<-SQL, attrs.merge({:id => id}))
         UPDATE restaurants
         SET screen_name => :screen_name
         WHERE critics.id = :id

@@ -20,8 +20,7 @@ class ChefTenure
   end
 
   def attrs
-    { :id => id,
-      :chef_id => chef_id,
+    { :chef_id => chef_id,
       :restaurant_id => restaurant_id,
       :start_date => start_date,
       :end_date => end_date,
@@ -30,7 +29,7 @@ class ChefTenure
 
   def save
     if @id
-      ReviewsDB.instance.execute(<<-SQL, attrs)
+      ReviewsDB.instance.execute(<<-SQL, attrs.merge({:id => id}))
         UPDATE chef_tenure
         SET chef_id => :chef_id, restaurant_id = :restaurant_id,
           start_date = :start_date, end_date => :end_date,

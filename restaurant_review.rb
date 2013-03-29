@@ -60,8 +60,7 @@ class RestaurantReview
   end
 
   def attrs
-    { :id => id,
-      :critic_id => critic_id,
+    { :critic_id => critic_id,
       :restaurant_id => restaurant_id,
       :body => body,
       :score => score,
@@ -70,7 +69,7 @@ class RestaurantReview
 
   def save
     if @id
-      ReviewsDB.instance.execute(<<-SQL, attrs)
+      ReviewsDB.instance.execute(<<-SQL, attrs.merge({:id => id}))
         UPDATE restaurant_reviews
         SET critic_id => :critic_id, restaurant_id => :restaurant_id,
             body => :body, score => :score, review_date => :review_date

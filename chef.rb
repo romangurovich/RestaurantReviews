@@ -19,15 +19,14 @@ class Chef
   end
 
   def attrs
-    { :id => id,
-      :first_name => first_name,
+    { :first_name => first_name,
       :last_name => last_name,
       :mentor => mentor }
   end
 
   def save
     if @id
-      ReviewsDB.instance.execute(<<-SQL, attrs)
+      ReviewsDB.instance.execute(<<-SQL, attrs.merge({:id => id}))
         UPDATE chefs
         SET first_name => :first_name, last_name = :last_name, mentor = :mentor
         WHERE chefs.id = :id
